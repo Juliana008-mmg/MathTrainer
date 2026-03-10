@@ -32,7 +32,7 @@ def equation_premier_degre():
         terme_c=f"+ {c}"
     else:
         terme_c=f"-{abs(c)}"
-    question=f"{terme_a}{terme_b}={terme_c}"
+    question=f"Résous l'équation de premier dégré suivant: {terme_a}{terme_b}={terme_c}"
     return question,solution  
 
 def equation_second_degre():
@@ -52,7 +52,7 @@ def equation_second_degre():
         terme_c=f"{c}"
     else:
         terme_c=f"-{abs(c)}"
-    question=f"{terme_a}{terme_b}{terme_c}=0"
+    question=f"Résous l'équation de second dégré suivant: {terme_a}{terme_b}{terme_c}=0"
     
     if D>0:
         x_1=((-b+np.sqrt(D))/(2*a))
@@ -77,7 +77,7 @@ def probleme_statistique():
     
     if type_question=="moyenne":
         solution=sum(donnees)/len(donnees)
-        question=f"Série:{donnees}\n\nCalculez la moyenne"
+        question=f"Série:{donnees}\n\nCalculez la moyenne de cette série"
     
     elif type_question=="mediane":
         d=sorted(donnees)
@@ -86,20 +86,20 @@ def probleme_statistique():
           solution=d[m//2]
         else:
             solution=(d[m//2-1]+d[m//2])/2
-        question=f"Série:{donnees}\n\nCalculez la médiane"
+        question=f"Série:{donnees}\n\nCalculez la médiane de cette série"
     elif type_question=="etendue":
         solution=max(donnees)-min(donnees)
-        question=f"Série:{donnees}\n\nCalculez l'étendue"
+        question=f"Série:{donnees}\n\nCalculez l'étendue de cette série"
     elif type_question=="variance":
         mean=np.mean(donnees)
         solution=sum((x-mean)**2 for x in donnees)/len(donnees)
-        question=f"Série:{donnees}\n\nCalculez la variance"
+        question=f"Série:{donnees}\n\nCalculez la variance de cette série"
     elif type_question=="écart-type":
         solution=np.std(donnees)
-        question=f"Série:{donnees}\n\nCalculez l'écart-type"
+        question=f"Série:{donnees}\n\nCalculez l'écart-type de cette série"
     else:
         solution=max(set(donnees),key=donnees.count)
-        question=f"Série:{donnees}\n\nCalculez la mode"
+        question=f"Série:{donnees}\n\nCalculez la mode de cette série"
     return question,solution  
  #--------GENERER QUESTION--------  
 if st.button("Nouvelle question"):
