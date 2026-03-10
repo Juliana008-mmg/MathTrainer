@@ -17,10 +17,22 @@ type_exercice=st.sidebar.selectbox(
 #--------EQUATIONS--------  
 def equation_premier_degre():
     a=random.randint(1,10)
-    b=random.randint(1,10)
-    c=random.randint(1,20)
+    b=random.randint(-10,10)
+    c=random.randint(-10,20)
     solution=(c-b)/a
-    question=f"{a}x+{b}={c}"
+    if a==1:
+        terme_a=f"x"
+    else:
+        terme_a=f"+ {a}x"
+    if b>=0:
+        terme_b=f"+ {b}"
+    else:
+        terme_b=f"-{abs(b)}"
+    if c>=0:
+        terme_c=f"+ {c}"
+    else:
+        terme_c=f"-{abs(c)}"
+    question=f"{terme_a}{terme_b}={terme_c}"
     return question,solution  
 
 def equation_second_degre():
