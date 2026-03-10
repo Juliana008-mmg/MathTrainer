@@ -3,7 +3,7 @@ import numpy as np
 import random  
 
 
-st.title("📘MathTrainer📘")  
+st.title("📘MathTrainer")  
 st.subheader("Bienvenue sur MathTrainer")
 #Scoreglobal
 if "score" not in st.session_state:
