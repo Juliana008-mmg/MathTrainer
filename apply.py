@@ -27,8 +27,21 @@ def equation_second_degre():
     a=random.randint(1,10)
     b=random.randint(-10,10)
     c=random.randint(-10,10)
-    question=f"({a})x²+({b})x+({c})=0"
     D=b**2-4*a*c
+    if a==1:
+        terme_a=f"x²"
+    else:
+        terme_a=f"+ {a}x²"
+    if b>=0:
+        terme_b=f"+ {b}x"
+    else:
+        terme_b=f"-{abs(b)}x"
+    if c>=0:
+        terme_c=f"+ {c}"
+    else:
+        terme_c=f"-{abs(c)}"
+    question=f"{terme_a}{terme_b}{terme_c}=0"
+    
     if D>0:
         x_1=((-b+np.sqrt(D))/(2*a))
         x_2=((-b-np.sqrt(D))/(2*a))
