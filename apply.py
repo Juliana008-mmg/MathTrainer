@@ -112,8 +112,8 @@ if"question"in st.session_state:
     st.write(st.session_state.question)  
 #Réponse utilisateur 
 reponse=None
-x_1=None
-x_2=None
+x1=None
+x2=None
 if type_exercice=="Équation de premier dégré": 
     reponse=st.number_input("Votre réponse",step=0.1) 
 elif type_exercice=="Équation de second dégré":
@@ -123,8 +123,8 @@ elif type_exercice=="Équation de second dégré":
     elif len(sol)==1:
         x=st.number_input("x",step=0.1)
     else:
-        x_1=st.number_input("x_1",step=0.1)
-        x_2=st.number_input("x_2",step=0.1)
+        x1=st.number_input("x1",step=0.1)
+        x2=st.number_input("x2",step=0.1)
 else:
     reponse=st.number_input("Votre réponse",step=0.1)
 #Vérification 
@@ -149,7 +149,7 @@ if st.button("Valider"):
             else:
                 st.error(f"La solution était: {sol[0]}")
         else:
-            if (abs(x_1-sol[0])<0.01 and abs(x_2-sol[1])<0.01)or (abs(x_1-sol[1])<0.01 and abs(x_2-sol[0])<0.01):
+            if (abs(x1-sol[0])<0.01 and abs(x2-sol[1])<0.01)or (abs(x1-sol[1])<0.01 and abs(x2-sol[0])<0.01):
                 st.success("Bonne réponse!")
                 st.session_state.score+=1
             else:
