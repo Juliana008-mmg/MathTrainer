@@ -49,7 +49,7 @@ def equation_second_degre():
     else:
         terme_b=f"-{abs(b)}x"
     if c>=0:
-        terme_c=f"+ {c}"
+        terme_c=f"{c}"
     else:
         terme_c=f"-{abs(c)}"
     question=f"{terme_a}{terme_b}{terme_c}=0"
