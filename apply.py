@@ -13,7 +13,7 @@ if "score" not in st.session_state:
 #Menu 
 type_exercice=st.sidebar.selectbox(
     "Choisir un exercice",
-    ["Équation du premier degré","Equation de second dégré","Statistiques"] )  
+    ["Équation du premier degré","Équation de second dégré","Statistiques"] )  
 #--------EQUATIONS--------  
 def equation_premier_degre():
     a=random.randint(1,10)
@@ -23,16 +23,13 @@ def equation_premier_degre():
     if a==1:
         terme_a=f"x"
     else:
-        terme_a=f"+ {a}x"
+        terme_a=f"{a}x"
     if b>=0:
         terme_b=f"+ {b}"
     else:
         terme_b=f"-{abs(b)}"
-    if c>=0:
-        terme_c=f"+ {c}"
-    else:
-        terme_c=f"-{abs(c)}"
-    question=f"Résous l'équation de premier dégré suivant: {terme_a}{terme_b}={terme_c}"
+
+    question=f"Résous l'équation de premier dégré suivant: {terme_a}{terme_b}={c}"
     return question,solution  
 
 def equation_second_degre():
@@ -43,13 +40,13 @@ def equation_second_degre():
     if a==1:
         terme_a=f"x²"
     else:
-        terme_a=f"+ {a}x²"
+        terme_a=f"{a}x²"
     if b>=0:
         terme_b=f"+ {b}x"
     else:
         terme_b=f"-{abs(b)}x"
     if c>=0:
-        terme_c=f"{c}"
+        terme_c=f"+ {c}"
     else:
         terme_c=f"-{abs(c)}"
     question=f"Résous l'équation de second dégré suivant: {terme_a}{terme_b}{terme_c}=0"
@@ -105,7 +102,7 @@ def probleme_statistique():
 if st.button("Nouvelle question"):
     if type_exercice=="Équation du premier degré":
         question,solution=equation_premier_degre()
-    elif type_exercice=="Equation de second dégré":
+    elif type_exercice=="Équation de second dégré":
         question,solution=equation_second_degre()
     else:question,solution=probleme_statistique()
     st.session_state.solution=solution
@@ -119,7 +116,7 @@ x_1=None
 x_2=None
 if type_exercice=="Équation de premier dégré": 
     reponse=st.number_input("Votre réponse",step=0.1) 
-elif type_exercice=="Equation de second dégré":
+elif type_exercice=="Équation de second dégré":
     sol=st.session_state.solution
     if sol is None:
         st.write("Cette équation n'a pas de solution réelle")
@@ -141,7 +138,7 @@ if st.button("Valider"):
             st.error(f"La solution était{st.session_state.solution}")
 
     
-    elif type_exercice=="Equation de second dégré":
+    elif type_exercice=="Équation de second dégré":
         sol=st.session_state.solution
         if sol is None:
             st.warning("Pas de solution réelle")
@@ -150,13 +147,13 @@ if st.button("Valider"):
                 st.success("Bonne réponse!")
                 st.session_state.score +=1
             else:
-                st.error(f"La solution était{sol[0]}")
+                st.error(f"La solution était: {sol[0]}")
         else:
             if (abs(x_1-sol[0])<0.01 and abs(x_2-sol[1])<0.01)or (abs(x_1-sol[1])<0.01 and abs(x_2-sol[0])<0.01):
                 st.success("Bonne réponse!")
                 st.session_state.score+=1
             else:
-                st.error(f"Les solutions étaient{sol[0]} et {sol[1]}")
+                st.error(f"Les solutions étaient: {sol[0]} et {sol[1]}")
     else :
         if abs(reponse-st.session_state.solution)<0.01:
             st.success("Bonne réponse!")
