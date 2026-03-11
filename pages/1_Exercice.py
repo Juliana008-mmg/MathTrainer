@@ -15,7 +15,8 @@ if "total" not in st.session_state:
 
 type_exercice=st.sidebar.selectbox(
     "Choisir un exercice",
-    ["Équation du premier degré","Équation de second dégré","Statistiques"] )  
+    ["Équation du premier degré","Équation de second dégré","Statistiques,"Équation différentielle 1er ordre",
+"Équation différentielle 2nd ordre"]  )  
 #--------EQUATIONS--------  
 def equation_premier_degre():
     a=random.randint(1,10)
@@ -106,6 +107,25 @@ def probleme_statistique():
         solution=max(set(donnees),key=donnees.count)
         question=f"Série:{donnees}\n\nCalculez la mode de cette série"
     return question,solution  
+def eq_diff_premier_ordre():
+
+    a = random.randint(-5,5)
+
+    question = f"Résoudre l'équation différentielle : y' = {a}y"
+
+    solution = f"y=Ce^({a}x)"
+
+    return question, solution
+
+def eq_diff_second_ordre():
+
+    a = random.randint(1,20)
+
+    r = np.sqrt(a)
+
+    question = f"Résoudre : y'' - {a}y = 0. Donner la valeur de r."
+
+    return question, r
  #--------GENERER QUESTION--------  
 if st.button("Nouvelle question"):
     st.session_state.start_time = time.time()
@@ -113,6 +133,10 @@ if st.button("Nouvelle question"):
         question,solution=equation_premier_degre()
     elif type_exercice=="Équation de second dégré":
         question,solution=equation_second_degre()
+    elif type_exercice == "Équation différentielle 1er ordre":
+        question, solution = eq_diff_premier_ordre()
+    elif type_exercice == "Équation différentielle 2nd ordre":
+        question, solution = eq_diff_second_ordre()
     else:question,solution=probleme_statistique()
     st.session_state.solution=solution
     st.session_state.question=question  
@@ -134,6 +158,10 @@ elif type_exercice=="Équation de second dégré":
     else:
         x1=st.number_input("x1",step=0.1)
         x2=st.number_input("x2",step=0.1)
+elif type_exercice=="Équation différentielle 1er ordre":
+    reponse=st.text_input("Votre réponse: ") 
+elif type_exercice=="Équation différentielle 2nd ordre":
+    reponse=st.number_input("Votre réponse: ") 
 else:
     reponse=st.number_input("Votre réponse",step=0.1)
 #Vérification 
@@ -163,6 +191,25 @@ if st.button("Valider"):
                 st.session_state.score+=1
             else:
                 st.error(f"Les solutions étaient: {sol[0]} et {sol[1]}")
+     elif type_exercice=="Équation différentielle 1er ordre":
+        if st.session_state.solution in reponse:
+            st.success("Bonne réponse !")
+            st.session_state.score += 1
+        else:
+            st.error(f"La solution est : {st.session_state.solution}")
+    elif type_exercice == "Équation différentielle 2nd ordre":
+        r = st.session_state.solution
+        tol = 0.01
+
+        if abs(reponse - r) < tol:
+            st.success("Bonne réponse !")
+            st.session_state.score += 1
+        else:
+            st.error("Mauvaise réponse")
+
+        st.write("Solution mathématique :")
+        st.write(f"r = ±{round(r,2)}")
+        st.write(f"Donc la solution générale est : y = C1 e^({round(r,2)}x) + C2 e^(-{round(r,2)}x)")
     else :
         if abs(reponse-st.session_state.solution)<0.01:
             st.success("Bonne réponse !")
