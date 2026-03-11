@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import random  
 import time
+import pandas as pd
 
 
 st.title("Exercice de Mathématiques")  
