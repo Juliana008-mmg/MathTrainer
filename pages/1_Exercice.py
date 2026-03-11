@@ -1,6 +1,7 @@
 import streamlit as st 
 import numpy as np
 import random  
+import time
 
 
 st.title("Exercice de Mathématiques")  
@@ -100,6 +101,7 @@ def probleme_statistique():
     return question,solution  
  #--------GENERER QUESTION--------  
 if st.button("Nouvelle question"):
+    st.session_state.start_time = time.time()
     if type_exercice=="Équation du premier degré":
         question,solution=equation_premier_degre()
     elif type_exercice=="Équation de second dégré":
@@ -111,7 +113,7 @@ if st.button("Nouvelle question"):
 if"question"in st.session_state:
     st.write(st.session_state.question)  
 #Réponse utilisateur 
-reponse=None
+reponse=Nonest.session_state.start_time = time.time()
 x1=None
 x2=None
 if type_exercice=="Équation de premier dégré": 
@@ -162,3 +164,6 @@ if st.button("Valider"):
             st.error(f"La solution était: {st.session_state.solution}")
 
     st.session_state.valide=True
+    temps = time.time() - st.session_state.start_time
+
+    st.write("Temps de réponse :", round(temps,2), "secondes")
