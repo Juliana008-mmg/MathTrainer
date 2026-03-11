@@ -71,6 +71,12 @@ def equation_second_degre():
  #--------STATISTIQUES-------- 
 def probleme_statistique():
     donnees=[random.randint(1,20)for _ in range(6)]
+
+    st.write("Données :", donnees)
+
+    df = pd.DataFrame(donnees, columns=["Valeurs"])
+
+    st.bar_chart(df)
     type_question=random.choice(["moyenne","mediane","etendue","mode","variance","écart-type"])
     
     if type_question=="moyenne":
