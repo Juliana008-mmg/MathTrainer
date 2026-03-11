@@ -132,7 +132,7 @@ if st.button("Valider"):
     st.session_state.total+=1
     if type_exercice=="Équation de premier dégré":
         if abs(reponse-st.session_state.solution)<0.01:
-            st.success("Bonne réponse!")
+            st.success("Bonne réponse !")
             st.session_state.score +=1
         else:
             st.error(f"La solution était{st.session_state.solution}")
@@ -144,19 +144,19 @@ if st.button("Valider"):
             st.warning("Pas de solution réelle")
         elif len(sol)==1:
             if abs(x-sol[0])<0.01:
-                st.success("Bonne réponse!")
+                st.success("Bonne réponse !")
                 st.session_state.score +=1
             else:
                 st.error(f"La solution était: {sol[0]}")
         else:
             if (abs(x1-sol[0])<0.01 and abs(x2-sol[1])<0.01)or (abs(x1-sol[1])<0.01 and abs(x2-sol[0])<0.01):
-                st.success("Bonne réponse!")
+                st.success("Bonne réponse !")
                 st.session_state.score+=1
             else:
                 st.error(f"Les solutions étaient: {sol[0]} et {sol[1]}")
     else :
         if abs(reponse-st.session_state.solution)<0.01:
-            st.success("Bonne réponse!")
+            st.success("Bonne réponse !")
             st.session_state.score+=1
         else:
             st.error(f"La solution était: {st.session_state.solution}")
