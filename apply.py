@@ -12,7 +12,8 @@ Ce site permet de s'entraîner en mathématiques avec des exercices interactifs.
 - Équations du premier degré
 - Équations du second degré
 - Statistiques
-- Équations différentielles
+- Équations différentielles du 1er ordre
+- Équations différentielles du 2nd ordre
 
 Utilisez le menu à gauche pour naviguer.
 """)
