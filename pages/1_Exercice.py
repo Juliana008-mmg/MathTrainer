@@ -15,7 +15,7 @@ if "total" not in st.session_state:
 
 type_exercice=st.sidebar.selectbox(
     "Choisir un exercice",
-    ["Équation du premier degré","Équation de second dégré","Statistiques,"Équation différentielle 1er ordre",
+    ["Équation du premier degré","Équation de second dégré","Statistiques","Équation différentielle 1er ordre",
 "Équation différentielle 2nd ordre"]  )  
 #--------EQUATIONS--------  
 def equation_premier_degre():
