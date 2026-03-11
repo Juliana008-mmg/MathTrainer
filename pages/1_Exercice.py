@@ -109,14 +109,13 @@ def probleme_statistique():
     return question,solution  
 def eq_diff_premier_ordre():
 
-    a = random.randint(-5,5)
+    a = random.choice([-5,-4,-3,-2,-1,1,2,3,4,5])
 
     question = f"Résoudre l'équation différentielle : y' = {a}y"
 
-    solution = f"y=Ce^({a}x)"
+    solution = f"y = Ce^({a}x)"
 
     return question, solution
-
 def eq_diff_second_ordre():
 
     a = random.randint(1,20)
@@ -161,7 +160,7 @@ elif type_exercice=="Équation de second dégré":
 elif type_exercice=="Équation différentielle 1er ordre":
     reponse=st.text_input("Votre réponse: ") 
 elif type_exercice=="Équation différentielle 2nd ordre":
-    reponse=st.number_input("Votre réponse: ") 
+    reponse=st.number_input("Votre réponse: ",step=0.1) 
 else:
     reponse=st.number_input("Votre réponse",step=0.1)
 #Vérification 
@@ -191,7 +190,7 @@ if st.button("Valider"):
                 st.session_state.score+=1
             else:
                 st.error(f"Les solutions étaient: {sol[0]} et {sol[1]}")
-     elif type_exercice=="Équation différentielle 1er ordre":
+    elif type_exercice=="Équation différentielle 1er ordre":
         if st.session_state.solution in reponse:
             st.success("Bonne réponse !")
             st.session_state.score += 1
