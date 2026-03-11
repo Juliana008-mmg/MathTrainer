@@ -113,7 +113,7 @@ if st.button("Nouvelle question"):
 if"question"in st.session_state:
     st.write(st.session_state.question)  
 #Réponse utilisateur 
-reponse=Nonest.session_state.start_time = time.time()
+reponse=None
 x1=None
 x2=None
 if type_exercice=="Équation de premier dégré": 
