@@ -69,7 +69,7 @@ Valeur la plus fréquente dans la série.
 Étendue = valeur max - valeur min
 
 **Variance (population) :**  
-Variance = [(x1 - Moyenne)^2 + (x2 - Moyenne)^2 + ... + (xn - Moyenne)^2] / n
+Variance = [(x1 - Moyenne)² + (x2 - Moyenne)² + ... + (xn - Moyenne)²] / n
 
 **Écart-type :**  
 Écart-type = racine carrée de la variance
