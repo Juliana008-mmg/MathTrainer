@@ -1,4 +1,6 @@
+# cours_streamlit.py
 import streamlit as st
+import statistics as stats
 
 # Titre général
 st.title("📚 Mini-cours de mathématiques")
@@ -54,19 +56,57 @@ x1 = 2, x2 = 3
 elif notion == "Statistiques":
     st.header("Statistiques")
     st.markdown("""
-**Définitions importantes :**  
-- Moyenne : somme des valeurs / nombre de valeurs  
-- Médiane : valeur du milieu  
-- Mode : valeur la plus fréquente  
-- Écart-type : mesure de dispersion  
+**Définitions et formules importantes :**
 
-**Exemple :**  
-Série : 2, 4, 6, 6, 8  
-Moyenne : 5.2  
-Médiane : 6  
-Mode : 6  
-Écart-type : calculable
-    """)
+- **Moyenne :**  
+  \(\bar{x} = \frac{\sum x_i}{n}\)  
+  Somme des valeurs divisée par le nombre de valeurs.
+
+- **Médiane :**  
+  Valeur qui sépare la série en deux parties égales.
+
+- **Mode :**  
+  Valeur la plus fréquente dans la série.
+
+- **Étendue :**  
+  \(E = x_{max} - x_{min}\)  
+  Différence entre la plus grande et la plus petite valeur.
+
+- **Variance :**  
+  \(Var(X) = \frac{\sum (x_i - \bar{x})^2}{n}\)  
+  Mesure de dispersion autour de la moyenne.
+
+- **Écart-type :**  
+  \(σ = \sqrt{Var(X)}\)  
+  Racine carrée de la variance.
+""")
+
+    # Exemple interactif
+    st.subheader("Exemple interactif")
+    data_input = st.text_input(
+        "Entrez une série de nombres séparés par des virgules",
+        "2,4,6,6,8"
+    )
+
+    if data_input:
+        try:
+            data = [float(x.strip()) for x in data_input.split(",")]
+            moyenne = stats.mean(data)
+            mediane = stats.median(data)
+            mode = stats.mode(data)
+            etendue = max(data) - min(data)
+            variance = stats.pvariance(data)  # variance populationnelle
+            ecart_type = stats.pstdev(data)  # écart-type populationnel
+
+            st.write("**Données :**", data)
+            st.write("**Moyenne :**", moyenne)
+            st.write("**Médiane :**", mediane)
+            st.write("**Mode :**", mode)
+            st.write("**Étendue :**", etendue)
+            st.write("**Variance :**", variance)
+            st.write("**Écart-type :**", ecart_type)
+        except:
+            st.error("Erreur dans la saisie des données. Utilisez des nombres séparés par des virgules.")
 
 # 4️⃣ Équations différentielles de premier ordre
 elif notion == "Équations différentielles de premier ordre":
