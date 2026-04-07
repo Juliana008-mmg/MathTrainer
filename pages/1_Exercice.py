@@ -18,7 +18,7 @@ type_exercice=st.sidebar.selectbox(
     ["Équation du premier degré","Équation de second dégré","Statistiques","Équation différentielle 1er ordre",
 "Équation différentielle 2nd ordre"]  )  
 
-#--------FONCTIONS DE GÉNÉRATION (LOGIQUE ORIGINALE RESTAURÉE)--------  
+#--------FONCTIONS DE GÉNÉRATION (LOGIQUE ORIGINALE + QUESTIONS)--------  
 
 def equation_premier_degre():
     a=random.randint(1,10)
@@ -26,24 +26,23 @@ def equation_premier_degre():
     c=random.randint(-10,20)
     solution=(c-b)/a
     
-    # Rendu LaTeX pour l'affichage
     signe_b = "+" if b >= 0 else "-"
     val_b = abs(b)
-    if a == 1:
-        st.latex(rf"x {signe_b} {val_b} = {c}")
-    else:
-        st.latex(rf"{a}x {signe_b} {val_b} = {c}")
+    terme_a = "x" if a == 1 else f"{a}x"
+    
+    # On remet la question claire
+    st.write(f"Résous l'équation de premier degré suivante :")
+    st.latex(rf"{terme_a} {signe_b} {val_b} = {c}")
         
     return solution  
 
 def equation_second_degre():
-    # Retour à ta logique sans boucle while : toutes les valeurs de delta sont possibles
     a=random.randint(1,10)
     b=random.randint(-10,10)
     c=random.randint(-10,10)
     delta=b**2-4*a*c
     
-    # Rendu LaTeX
+    st.write("Trouve les racines réelles de l'équation suivante :")
     sb = "+" if b >= 0 else ""
     sc = "+" if c >= 0 else ""
     st.latex(rf"{a}x^2 {sb} {b}x {sc} {c} = 0")
@@ -56,7 +55,7 @@ def equation_second_degre():
         sol = -b/(2*a)
         return [sol]
     else:
-        return [] # Pas de solution réelle
+        return [] 
 
 def probleme_statistique():
     donnees = [random.randint(1, 20) for _ in range(6)]
@@ -78,11 +77,13 @@ def probleme_statistique():
 
 def equa_diff_1():
     a = random.randint(1, 10)
+    st.write("Donne la solution générale de l'équation différentielle :")
     st.latex(rf"y' = {a}y")
     return f"C * e^({a}x)"
 
 def equa_diff_2():
     a = random.randint(1, 20)
+    st.write("Trouve la valeur de la racine positive $r$ de l'équation caractéristique associée à :")
     st.latex(rf"y'' - {a}y = 0")
     return np.sqrt(a)
 
@@ -103,14 +104,15 @@ if st.button("Nouvelle question"):
         st.session_state.solution = equa_diff_2()
 
 if st.session_state.solution is not None:
+    # Affichage des champs de saisie
     if type_exercice == "Statistiques":
         st.write(st.session_state.question)
         reponse = st.number_input("Votre réponse", format="%.2f")
     elif type_exercice == "Équation de second dégré":
         sol = st.session_state.solution
         if len(sol) == 0:
-            st.write("Cette équation n'a pas de solution réelle. Cochez la case si vous êtes d'accord.")
-            reponse_vide = st.checkbox("Pas de solution")
+            st.write("Cette équation n'a pas de solution réelle.")
+            reponse_vide = st.checkbox("Cocher ici s'il n'y a pas de solution")
         elif len(sol) == 1:
             x1 = st.number_input("Solution unique (x0)", format="%.2f")
         else:
@@ -120,10 +122,9 @@ if st.session_state.solution is not None:
             with col2:
                 x2 = st.number_input("x2", format="%.2f")
     elif type_exercice == "Équation différentielle 1er ordre":
-        reponse = st.text_input("Donner la solution générale (ex: C * e^(2x))")
+        reponse = st.text_input("Solution générale (ex: C * e^(2x))")
     elif type_exercice == "Équation différentielle 2nd ordre":
-        st.write("Donner la valeur de r.")
-        reponse = st.number_input("Votre réponse", format="%.2f")
+        reponse = st.number_input("Valeur de r", format="%.2f")
     else:
         reponse = st.number_input("Votre réponse", format="%.2f")
 
@@ -131,20 +132,28 @@ if st.session_state.solution is not None:
         sol = st.session_state.solution
         temps = round(time.time() - st.session_state.start_time, 2)
         
-        if type_exercice == "Équation du premier degré" or type_exercice == "Statistiques":
-            if abs(reponse - sol) < 0.01:
+        # Logique de validation (Inchangée)
+        if type_exercice in ["Équation du premier degré", "Statistiques", "Équation différentielle 2nd ordre"]:
+            if type_exercice == "Équation différentielle 2nd ordre":
+                check = abs(reponse - sol) < 0.01
+            else:
+                check = abs(reponse - sol) < 0.01
+            
+            if check:
                 st.success("Bonne réponse !")
                 st.session_state.score += 1
+                if type_exercice == "Équation différentielle 2nd ordre":
+                     st.write(f"La solution est bien $r = \pm {round(sol, 2)}$.")
             else:
-                st.error(f"La solution était : {round(sol, 2)}")
+                st.error(f"La solution était : {round(sol, 2) if not isinstance(sol, list) else sol}")
         
         elif type_exercice == "Équation de second dégré":
             if len(sol) == 0:
                 if reponse_vide:
-                    st.success("Bonne réponse ! (Pas de solution réelle)")
+                    st.success("Bonne réponse !")
                     st.session_state.score += 1
                 else:
-                    st.error("Mauvaise réponse, il n'y avait pas de solution.")
+                    st.error("Il n'y avait pas de solution réelle.")
             elif len(sol) == 1:
                 if abs(x1 - sol[0]) < 0.01:
                     st.success("Bonne réponse !")
@@ -164,15 +173,5 @@ if st.session_state.solution is not None:
                 st.session_state.score += 1
             else:
                 st.error(f"La solution est : {sol}")
-        
-        elif type_exercice == "Équation différentielle 2nd ordre":
-            if abs(reponse - sol) < 0.01:
-                st.success("Bonne réponse !")
-                st.session_state.score += 1
-                st.write("### Solution mathématique :")
-                st.latex(rf"r = \pm {round(sol, 2)}")
-                st.write(f"Donc la solution générale est : $y = C_1 e^{{{round(sol, 2)}x}} + C_2 e^{{{round(-sol, 2)}x}}$")
-            else:
-                st.error("Mauvaise réponse")
 
         st.write(f"Temps de réponse : `{temps}` secondes")
