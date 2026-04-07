@@ -4,8 +4,8 @@ import random
 import time
 import pandas as pd
 
-
 st.title("Exercice de Mathématiques")  
+
 if "solution" not in st.session_state:
     st.session_state.solution=None
 if "score" not in st.session_state:
@@ -17,206 +17,162 @@ type_exercice=st.sidebar.selectbox(
     "Choisir un exercice",
     ["Équation du premier degré","Équation de second dégré","Statistiques","Équation différentielle 1er ordre",
 "Équation différentielle 2nd ordre"]  )  
-#--------EQUATIONS--------  
+
+#--------FONCTIONS DE GÉNÉRATION (LOGIQUE ORIGINALE RESTAURÉE)--------  
+
 def equation_premier_degre():
     a=random.randint(1,10)
     b=random.randint(-10,10)
     c=random.randint(-10,20)
     solution=(c-b)/a
-    if a==1:
-        terme_a=f"x"
+    
+    # Rendu LaTeX pour l'affichage
+    signe_b = "+" if b >= 0 else "-"
+    val_b = abs(b)
+    if a == 1:
+        st.latex(rf"x {signe_b} {val_b} = {c}")
     else:
-        terme_a=f"{a}x"
-    if b>=0:
-        terme_b=f"+ {b}"
-    else:
-        terme_b=f"-{abs(b)}"
-
-    question=f"Résous l'équation de premier dégré suivant: {terme_a}{terme_b}={c}"
-    return question,solution  
+        st.latex(rf"{a}x {signe_b} {val_b} = {c}")
+        
+    return solution  
 
 def equation_second_degre():
+    # Retour à ta logique sans boucle while : toutes les valeurs de delta sont possibles
     a=random.randint(1,10)
     b=random.randint(-10,10)
     c=random.randint(-10,10)
-    D=b**2-4*a*c
-    if a==1:
-        terme_a=f"x²"
-    else:
-        terme_a=f"{a}x²"
-    if b>=0:
-        terme_b=f"+ {b}x"
-    else:
-        terme_b=f"-{abs(b)}x"
-    if c>=0:
-        terme_c=f"+ {c}"
-    else:
-        terme_c=f"-{abs(c)}"
-    question=f"Résous l'équation de second dégré suivant: {terme_a}{terme_b}{terme_c}=0"
+    delta=b**2-4*a*c
     
-    if D>0:
-        x_1=((-b+np.sqrt(D))/(2*a))
-        x_2=((-b-np.sqrt(D))/(2*a))
-        solution=(x_1 ,x_2 )
-
-    elif D==0:
-        x=-b/(2*a)
-        solution=(x, )
-
-    else:
-        solution=None
-        
-    return question,solution
+    # Rendu LaTeX
+    sb = "+" if b >= 0 else ""
+    sc = "+" if c >= 0 else ""
+    st.latex(rf"{a}x^2 {sb} {b}x {sc} {c} = 0")
     
+    if delta > 0:
+        sol1=(-b+np.sqrt(delta))/(2*a)
+        sol2=(-b-np.sqrt(delta))/(2*a)
+        return [sol1, sol2]
+    elif delta == 0:
+        sol = -b/(2*a)
+        return [sol]
+    else:
+        return [] # Pas de solution réelle
 
-
- #--------STATISTIQUES-------- 
 def probleme_statistique():
-    donnees=[random.randint(1,20)for _ in range(6)]
-
-    st.write("Données :", donnees)
-
-    df = pd.DataFrame(donnees, columns=["Valeurs"])
-
-    st.bar_chart(df)
-    type_question=random.choice(["moyenne","mediane","etendue","mode","variance","écart-type"])
+    donnees = [random.randint(1, 20) for _ in range(6)]
+    st.write("**Série de données :**")
+    st.info(", ".join(map(str, donnees))) 
+    st.bar_chart(donnees)
     
-    if type_question=="moyenne":
-        solution=sum(donnees)/len(donnees)
-        question=f"Série:{donnees}\n\nCalculez la moyenne de cette série"
-    
-    elif type_question=="mediane":
-        d=sorted(donnees)
-        m=len(d)
-        if m%2==1:
-          solution=d[m//2]
-        else:
-            solution=(d[m//2-1]+d[m//2])/2
-        question=f"Série:{donnees}\n\nCalculez la médiane de cette série"
-    elif type_question=="etendue":
-        solution=max(donnees)-min(donnees)
-        question=f"Série:{donnees}\n\nCalculez l'étendue de cette série"
-    elif type_question=="variance":
-        mean=np.mean(donnees)
-        solution=sum((x-mean)**2 for x in donnees)/len(donnees)
-        question=f"Série:{donnees}\n\nCalculez la variance de cette série"
-    elif type_question=="écart-type":
-        solution=np.std(donnees)
-        question=f"Série:{donnees}\n\nCalculez l'écart-type de cette série"
+    type_stat = random.choice(["moyenne", "médiane", "étendue"])
+    if type_stat == "moyenne":
+        sol = np.mean(donnees)
+        quest = "Calculez la moyenne de cette série"
+    elif type_stat == "médiane":
+        sol = np.median(donnees)
+        quest = "Calculez la médiane de cette série"
     else:
-        solution=max(set(donnees),key=donnees.count)
-        question=f"Série:{donnees}\n\nCalculez la mode de cette série"
-    return question,solution  
-def eq_diff_premier_ordre():
+        sol = np.max(donnees) - np.min(donnees)
+        quest = "Calculez l'étendue de cette série"
+    return quest, sol
 
-    a = random.choice([-5,-4,-3,-2,-1,1,2,3,4,5])
+def equa_diff_1():
+    a = random.randint(1, 10)
+    st.latex(rf"y' = {a}y")
+    return f"C * e^({a}x)"
 
-    question = f"Résoudre l'équation différentielle : y' = {a}y"
+def equa_diff_2():
+    a = random.randint(1, 20)
+    st.latex(rf"y'' - {a}y = 0")
+    return np.sqrt(a)
 
-    solution = f"y = Ce^({a}x)"
+#--------INTERFACE ET VALIDATION--------
 
-    return question, solution
-def eq_diff_second_ordre():
-
-    a = random.randint(1,20)
-
-    r = np.sqrt(a)
-
-    question = f"Résoudre : y'' - {a}y = 0. Donner la valeur de r."
-
-    return question, r
- #--------GENERER QUESTION--------  
 if st.button("Nouvelle question"):
+    st.session_state.total += 1
     st.session_state.start_time = time.time()
-    if type_exercice=="Équation du premier degré":
-        question,solution=equation_premier_degre()
-    elif type_exercice=="Équation de second dégré":
-        question,solution=equation_second_degre()
+    if type_exercice == "Équation du premier degré":
+        st.session_state.solution = equation_premier_degre()
+    elif type_exercice == "Équation de second dégré":
+        st.session_state.solution = equation_second_degre()
+    elif type_exercice == "Statistiques":
+        st.session_state.question, st.session_state.solution = probleme_statistique()
     elif type_exercice == "Équation différentielle 1er ordre":
-        question, solution = eq_diff_premier_ordre()
+        st.session_state.solution = equa_diff_1()
     elif type_exercice == "Équation différentielle 2nd ordre":
-        question, solution = eq_diff_second_ordre()
-    else:question,solution=probleme_statistique()
-    st.session_state.solution=solution
-    st.session_state.question=question  
-#Afficherlaquestion 
-if"question"in st.session_state:
-    st.write(st.session_state.question)  
-#Réponse utilisateur 
-reponse=None
-x1=None
-x2=None
-if type_exercice=="Équation de premier dégré": 
-    reponse=st.number_input("Votre réponse",step=0.1) 
-elif type_exercice=="Équation de second dégré":
-    sol=st.session_state.solution
-    if sol is None:
-        st.write("Cette équation n'a pas de solution réelle")
-    elif len(sol)==1:
-        x=st.number_input("x",step=0.1)
+        st.session_state.solution = equa_diff_2()
+
+if st.session_state.solution is not None:
+    if type_exercice == "Statistiques":
+        st.write(st.session_state.question)
+        reponse = st.number_input("Votre réponse", format="%.2f")
+    elif type_exercice == "Équation de second dégré":
+        sol = st.session_state.solution
+        if len(sol) == 0:
+            st.write("Cette équation n'a pas de solution réelle. Cochez la case si vous êtes d'accord.")
+            reponse_vide = st.checkbox("Pas de solution")
+        elif len(sol) == 1:
+            x1 = st.number_input("Solution unique (x0)", format="%.2f")
+        else:
+            col1, col2 = st.columns(2)
+            with col1:
+                x1 = st.number_input("x1", format="%.2f")
+            with col2:
+                x2 = st.number_input("x2", format="%.2f")
+    elif type_exercice == "Équation différentielle 1er ordre":
+        reponse = st.text_input("Donner la solution générale (ex: C * e^(2x))")
+    elif type_exercice == "Équation différentielle 2nd ordre":
+        st.write("Donner la valeur de r.")
+        reponse = st.number_input("Votre réponse", format="%.2f")
     else:
-        x1=st.number_input("x1",step=0.1)
-        x2=st.number_input("x2",step=0.1)
-elif type_exercice=="Équation différentielle 1er ordre":
-    reponse=st.text_input("Votre réponse: ") 
-elif type_exercice=="Équation différentielle 2nd ordre":
-    reponse=st.number_input("Votre réponse: ",step=0.1) 
-else:
-    reponse=st.number_input("Votre réponse",step=0.1)
-#Vérification 
-if st.button("Valider"):
-    st.session_state.total+=1
-    if type_exercice=="Équation de premier dégré":
-        if abs(reponse-st.session_state.solution)<0.01:
-            st.success("Bonne réponse !")
-            st.session_state.score +=1
-        else:
-            st.error(f"La solution était{st.session_state.solution}")
+        reponse = st.number_input("Votre réponse", format="%.2f")
 
-    
-    elif type_exercice=="Équation de second dégré":
-        sol=st.session_state.solution
-        if sol is None:
-            st.warning("Pas de solution réelle")
-        elif len(sol)==1:
-            if abs(x-sol[0])<0.01:
+    if st.button("Valider"):
+        sol = st.session_state.solution
+        temps = round(time.time() - st.session_state.start_time, 2)
+        
+        if type_exercice == "Équation du premier degré" or type_exercice == "Statistiques":
+            if abs(reponse - sol) < 0.01:
                 st.success("Bonne réponse !")
-                st.session_state.score +=1
+                st.session_state.score += 1
             else:
-                st.error(f"La solution était: {sol[0]}")
-        else:
-            if (abs(x1-sol[0])<0.01 and abs(x2-sol[1])<0.01)or (abs(x1-sol[1])<0.01 and abs(x2-sol[0])<0.01):
+                st.error(f"La solution était : {round(sol, 2)}")
+        
+        elif type_exercice == "Équation de second dégré":
+            if len(sol) == 0:
+                if reponse_vide:
+                    st.success("Bonne réponse ! (Pas de solution réelle)")
+                    st.session_state.score += 1
+                else:
+                    st.error("Mauvaise réponse, il n'y avait pas de solution.")
+            elif len(sol) == 1:
+                if abs(x1 - sol[0]) < 0.01:
+                    st.success("Bonne réponse !")
+                    st.session_state.score += 1
+                else:
+                    st.error(f"La solution était : {round(sol[0], 2)}")
+            else:
+                if (abs(x1-sol[0])<0.01 and abs(x2-sol[1])<0.01) or (abs(x1-sol[1])<0.01 and abs(x2-sol[0])<0.01):
+                    st.success("Bonne réponse !")
+                    st.session_state.score += 1
+                else:
+                    st.error(f"Les solutions étaient : {round(sol[0], 2)} et {round(sol[1], 2)}")
+        
+        elif type_exercice == "Équation différentielle 1er ordre":
+            if sol in reponse:
                 st.success("Bonne réponse !")
-                st.session_state.score+=1
+                st.session_state.score += 1
             else:
-                st.error(f"Les solutions étaient: {sol[0]} et {sol[1]}")
-    elif type_exercice=="Équation différentielle 1er ordre":
-        if st.session_state.solution in reponse:
-            st.success("Bonne réponse !")
-            st.session_state.score += 1
-        else:
-            st.error(f"La solution est : {st.session_state.solution}")
-    elif type_exercice == "Équation différentielle 2nd ordre":
-        r = st.session_state.solution
-        tol = 0.01
+                st.error(f"La solution est : {sol}")
+        
+        elif type_exercice == "Équation différentielle 2nd ordre":
+            if abs(reponse - sol) < 0.01:
+                st.success("Bonne réponse !")
+                st.session_state.score += 1
+                st.write("### Solution mathématique :")
+                st.latex(rf"r = \pm {round(sol, 2)}")
+                st.write(f"Donc la solution générale est : $y = C_1 e^{{{round(sol, 2)}x}} + C_2 e^{{{round(-sol, 2)}x}}$")
+            else:
+                st.error("Mauvaise réponse")
 
-        if abs(reponse - r) < tol:
-            st.success("Bonne réponse !")
-            st.session_state.score += 1
-        else:
-            st.error("Mauvaise réponse")
-
-        st.write("Solution mathématique :")
-        st.write(f"r = ±{round(r,2)}")
-        st.write(f"Donc la solution générale est : y = C1 e^({round(r,2)}x) + C2 e^(-{round(r,2)}x)")
-    else :
-        if abs(reponse-st.session_state.solution)<0.01:
-            st.success("Bonne réponse !")
-            st.session_state.score+=1
-        else:
-            st.error(f"La solution était: {st.session_state.solution}")
-
-    st.session_state.valide=True
-    temps = time.time() - st.session_state.start_time
-
-    st.write("Temps de réponse :", round(temps,2), "secondes")
+        st.write(f"Temps de réponse : `{temps}` secondes")
